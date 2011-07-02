@@ -52,6 +52,7 @@ class EvaluableIf(exp.Expression):
         return If(cond, self.items)
 
 
+    @property
     def else_(self):
 
         return If(True, self.items)

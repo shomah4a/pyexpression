@@ -12,7 +12,7 @@ def test_if():
         10
         ].elif_(_2)[
         20
-        ].else_()[
+        ].else_[
             30
             ]
 
