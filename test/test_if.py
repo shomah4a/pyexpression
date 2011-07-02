@@ -1,14 +1,14 @@
 #-*- coding:utf-8 -*-
 
 
-from pyexpression import FuncCall, Literal, _1, _2, _k, If
+from pyexpression import FuncCall, Literal, _1, _2, _k, if_
 
 
 def test_if():
 
     x = Literal(10)
 
-    b = If(_1)[
+    b = if_(_1)[
         10
         ].elif_(_2)[
         20

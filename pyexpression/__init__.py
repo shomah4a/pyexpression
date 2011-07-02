@@ -2,7 +2,7 @@
 
 import expressions
 from expressions import Literal, FuncCall
-from ifexp import If
+from ifexp import If as if_
 
 
 def __make_placeholders():
