@@ -13,6 +13,7 @@ def __make_placeholders():
 __make_placeholders()
 
 
+_ = expressions.Placeholder(0)
 _k = expressions.PlaceholderMaker()
 _v = Literal
 map_ = Literal(map)
