@@ -50,7 +50,10 @@ def test_slice():
 
 
 def test_placeholder():
-
+    u'''
+    引数
+    '''
+    
     @Literal
     def test(x, y):
 
@@ -58,7 +61,24 @@ def test_placeholder():
 
     assert(test(_1, 10) + _2 * _k.abc).eval(10, 20, abc=10) == 220
 
-    
+
+
+def test_getattr():
+    u'''
+    getattr してみる
+    '''
+
+    class Dummy():
+
+        def __init__(self):
+
+            self.x = 10
+            self.y = 20
+            self.z = 30
+
+
+    assert (_1.x + 20)(Dummy()) == 30
+
 
 
 def test_complex():
@@ -84,6 +104,19 @@ def test_map():
 
     
 
+def test_method():
+    u'''
+    メソッド
+    '''
+
+    class Test(object):
+    
+        def call(self):
+
+            return 100
+
+
+    assert (_1._m.call() + 200)(Test()) == 300
 
 
 

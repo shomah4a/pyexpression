@@ -14,10 +14,15 @@ __make_placeholders()
 
 
 _k = expressions.PlaceholderMaker()
-map = Literal(map)
-reduce = Literal(reduce)
-filter = Literal(filter)
 _v = Literal
+map_ = Literal(map)
+reduce_ = Literal(reduce)
+filter_ = Literal(filter)
+list_ = Literal(list)
+tuple_ = Literal(tuple)
+dict_ = Literal(dict)
+
+
 
 
 

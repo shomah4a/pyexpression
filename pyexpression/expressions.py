@@ -4,7 +4,17 @@
 import operator
 
 
-to_expression = lambda x: x if isinstance(x, Expression) else Literal(x)
+
+def to_expression(obj):
+
+    if isinstance(obj, Expression):
+        return obj
+    elif isinstance(obj, tuple):
+        return Tuple(obj)
+    elif isinstance(obj, list):
+        return List(obj)
+
+    return Literal(obj)
 
 
 
@@ -46,6 +56,33 @@ class Expression(object):
         return Index(self, idx)
 
 
+    @property
+    def _m(self):
+
+        return MethodGetter(self)
+
+
+
+class MethodGetter(object):
+    u'''
+    メソッドを呼び出すために使う
+    '''
+    
+    def __init__(self, obj):
+
+        self.object = obj
+
+
+
+    def __getattr__(self, attr):
+
+        def call(*args, **argd):
+
+            return FuncCall(getattr(self.object, attr), *args, **argd)
+
+        return call
+
+
 
 class FuncCall(Expression):
     u'''
@@ -66,7 +103,29 @@ class FuncCall(Expression):
         fargs = [x.eval(*args, **argd) for x in self.args]
         fargd = dict((k, v.eval(*args, **argd)) for k, v in self.argd.iteritems())
 
-        return self.function.eval()(*fargs, **fargd)
+        return self.function.eval(*args, **argd)(*fargs, **fargd)
+
+
+
+class List(Expression):
+
+    def __init__(self, lst):
+
+        self.items = map(to_expression, lst)
+        
+
+    def eval(self, *args, **argd):
+
+        return [x.eval(*args, **argd) for x in self.items]
+
+
+
+class Tuple(List):
+
+    def eval(self, *args, **argd):
+
+        return tuple(super(Tuple, self).eval(*args, **argd))
+
 
 
 
@@ -128,6 +187,7 @@ def __makeop():
         'neg',
         'pos',
         'invert',
+        'abs',
         ]
 
     for m in compare+arismethic:
@@ -171,12 +231,12 @@ def slice_to_expression(sl):
 
 
 
-def eval_slice(sl):
+def eval_slice(sl, *args, **argd):
 
     if isinstance(sl, slice):
-        return slice(*[to_expression(x) for x in [sl.start, sl.stop, sl.step]])
+        return slice(*[x.eval(*args, **argd) for x in [sl.start, sl.stop, sl.step]])
 
-    return sl.eval()
+    return sl.eval(*args, **argd)
 
     
 
@@ -195,7 +255,9 @@ class Index(Expression):
 
     def eval(self, *args, **argd):
 
-        return self.obj.__getitem__(eval_slice(self.index))
+        print self.obj, self.index
+
+        return self.obj.eval(*args, **argd).__getitem__(eval_slice(self.index))
 
 
 
