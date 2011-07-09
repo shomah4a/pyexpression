@@ -255,8 +255,6 @@ class Index(Expression):
 
     def eval(self, *args, **argd):
 
-        print self.obj, self.index
-
         return self.obj.eval(*args, **argd).__getitem__(eval_slice(self.index))
 
 
